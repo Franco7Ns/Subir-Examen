@@ -8,7 +8,9 @@ const Page = async () => {
 
   return (
     <div className="flex min-h-screen flex-col p-6">
-      HOME
+      <ul>
+        {users.map((user) => (<li key={user.id}>{user.name}</li>))}
+      </ul>
     </div>
   );
 }
