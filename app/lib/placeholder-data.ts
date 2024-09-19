@@ -1,7 +1,3 @@
-// This file contains placeholder data that you'll be replacing with real data in the Data Fetching chapter:
-
-import { date } from "zod";
-
 const users = [
   {
     id: '410544b2-4001-4271-9855-fec4b6a6442a',
@@ -34,7 +30,7 @@ const profesores = [
 const examenes = [
   {
     id: 'd6e15727-9fe1-4961-8c5b-ea44a9bd81ba',
-    name: 'Juan',
+    name: 'Examen de Biologia',
     subject: 'Biologia',
     date: '2024-12-06',
   },
