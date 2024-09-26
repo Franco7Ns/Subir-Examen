@@ -3,10 +3,10 @@
 import Link from 'next/link';
 
 const links = [
-  { name: 'Dashboard', href: '/dashboard' },
+  { name: 'Home', href: '/' },
   {
-    name: 'Examenes',
-    href: '/dashboard/examenes',
+    name: 'Examenes Profesores',
+    href: 'profesor/examenes',
   },
 ];
 

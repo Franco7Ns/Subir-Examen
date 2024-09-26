@@ -7,15 +7,24 @@ export const authConfig = {
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
-      const isOnDashboard = nextUrl.pathname.startsWith('/dashboard');
-      if (isOnDashboard) {
+      const isOnAlumno = nextUrl.pathname.startsWith('/alumno');
+      const isOnProfesor = nextUrl.pathname.startsWith('/profesor');
+
+      if (isOnProfesor) {
         if (isLoggedIn) return true;
-        return false; 
+        return false; // Redirect unauthenticated users to login page
       } else if (isLoggedIn) {
-        return Response.redirect(new URL('/dashboard', nextUrl));
+        return Response.redirect(new URL('/profesor', nextUrl));
+      }
+
+      if (isOnAlumno) {
+        if (isLoggedIn) return true;
+        return false; // Redirect unauthenticated users to login page
+      } else if (isLoggedIn) {
+        return Response.redirect(new URL('/alumno', nextUrl));
       }
       return true;
     },
   },
-  providers: [], 
+  providers: [], // Add providers with an empty array for now
 } satisfies NextAuthConfig;
