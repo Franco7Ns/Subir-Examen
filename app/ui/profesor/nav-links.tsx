@@ -8,6 +8,10 @@ const links = [
     name: 'Examenes Profesores',
     href: 'profesor/examenes',
   },
+  {
+    name: 'Crear Examen',
+    href: 'profesor/crear',
+  },
 ];
 
 export default function NavLinks() {

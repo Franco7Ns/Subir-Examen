@@ -9,11 +9,11 @@ const Page = async () => {
   const users = res.rows
 
   return (
-    <main>
-      <div>
+    <div className="mt-11 pl-28 pr-72 ml-72 mr-72 bg-blue-500 items-center">
+      <div >
           {users.map((user) => (<h1 key={user.id}>Bienvenido {user.name}</h1>))}
       </div>
-    </main>
+    </div>
   );
 }
 

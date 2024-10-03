@@ -10,11 +10,11 @@ const Page = async () => {
 
   return (
     <main>
-      <div>
+      <section className="mt-11 pl-28 pt-20 pb-20 pr-72 ml-72 mr-96 bg-blue-500 flex items-center">
         <ul>
           {alumnos.map((alumno) => (<li key={alumno.id}>El alumno {alumno.name} tiene la nota: {alumno.calificacion}</li>))}
         </ul>
-      </div>
+      </section>
     </main>
   );
 }
