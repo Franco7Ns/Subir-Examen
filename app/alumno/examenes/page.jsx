@@ -10,7 +10,7 @@ const Page = async () => {
 
   return (
     <main>
-      <div className="mt-40 ml-72 mr-72 bg-blue-500 items-center">
+      <div>
         <ul>
           {alumnos.map((alumno) => (<li key={alumno.id}>El alumno {alumno.name} tiene la nota: {alumno.calificacion}</li>))}
         </ul>
