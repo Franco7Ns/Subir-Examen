@@ -1,4 +1,5 @@
 import { sql } from "@vercel/postgres";
+import { fetchExamenes } from "../lib/data";
 
 const Page = async () => {
   const res = await sql`
@@ -19,6 +20,7 @@ const Page = async () => {
     <main>
       <div>
           {users.map((user) => (<h1 key={user.id}>Bienvenido {user.name}</h1>))}
+          <fetchExamenes />
       </div>
       <div>
       {examenes.map((examen) => (<h1 key={examen.id}>Proximos examenes:  {examen.name}</h1>))}
