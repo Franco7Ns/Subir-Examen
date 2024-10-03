@@ -19,7 +19,7 @@ export default function NavLinks() {
          <Link
             key={link.name}
             href={link.href}
-            className='mt-auto ml-7 w-60 bg-blue-800  rounded-md outline-2 py-[10px]'
+            className='mt-auto ml-7 w-60 bg-green-500  rounded-md outline-2 py-[10px]'
           >
             <p>{link.name}</p>
           </Link>
