@@ -6,7 +6,6 @@ export const authConfig = {
     signIn: '/login',
   },
   callbacks: {
-
     async redirect({ url, baseUrl }) {
       if (url.startsWith(baseUrl)) {
         if (url.includes('/profesor') || url.includes('/alumno')) {
@@ -36,8 +35,17 @@ export const authConfig = {
       const isLoggedIn = !!user;
       const isOnProfesor = nextUrl.pathname.startsWith('/profesor');
       const isOnAlumnos = nextUrl.pathname.startsWith('/alumno');
+      const isOnLogin = nextUrl.pathname === '/login';
+      const isOnHome = nextUrl.pathname === '/';
 
-      if (isLoggedIn && user) {
+
+      if (isLoggedIn) {
+        if (isOnHome) {
+          return Response.redirect(new URL(user.role === 'profesor' ? '/profesor' : '/alumno', nextUrl));
+        }
+        if (isOnLogin) {
+          return Response.redirect(new URL(user.role === 'profesor' ? '/profesor' : '/alumno', nextUrl));
+        }
         const userRole = user.role;
         if (isOnProfesor && userRole !== 'profesor') {
           return Response.redirect(new URL('/alumno', nextUrl));
@@ -55,5 +63,5 @@ export const authConfig = {
       return true;
     },
   },
-  providers: [],
+  providers: [], 
 } satisfies NextAuthConfig;
