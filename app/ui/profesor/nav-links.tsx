@@ -4,14 +4,6 @@ import Link from 'next/link';
 
 const links = [
   { name: 'Home', href: '/profesor' },
-  {
-    name: 'Examenes Profesores',
-    href: 'profesor/examenes',
-  },
-  {
-    name: 'Crear Examen',
-    href: 'profesor/crear',
-  },
 ];
 
 export default function NavLinks() {
@@ -23,7 +15,7 @@ export default function NavLinks() {
          <Link
             key={link.name}
             href={link.href}
-            className='mt-6 ml-7 w-60 bg-green-500  rounded-md outline-2 py-[10px]'
+            className='mt-6 ml-7 w-60 bg-green-500  rounded-md outline-2 py-[10px] hover:bg-sky-100 hover:text-green-600'
           >
             <p>{link.name}</p>
           </Link>

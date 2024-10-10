@@ -9,10 +9,10 @@ export default function Page() {
             Bienvenido a la pagina donde subir y ver los examenes
           </p>
           <Link
-            href="/login"
+            href="/profesor"
             className="flex items-center gap-5 self-start rounded-lg bg-green-700 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-green-900 md:text-base"
           >
-            <span>Log in</span> 
+            <span>Ingresar</span> 
           </Link>
         </div>
       </div>

@@ -2,6 +2,8 @@
 
 import { signIn } from '@/auth';
 import { AuthError } from 'next-auth';
+import { sql } from '@vercel/postgres';
+import { revalidatePath } from 'next/cache';
 
 export async function authenticate(
   prevState: string | undefined,
@@ -19,5 +21,44 @@ export async function authenticate(
       }
     }
     throw error;
+  }
+}
+
+export async function addExam(exam: { name: string; subject: string; date: string }) {
+  await sql`
+    INSERT INTO examenes (name, subject, date)
+    VALUES (${exam.name}, ${exam.subject}, ${exam.date})
+  `;
+  revalidatePath('/profesor');
+}
+
+export async function getExam(id: string) {
+  const res = await sql`
+    SELECT id, name, subject, date
+    FROM examenes
+    WHERE id = ${id}
+  `;
+  return res.rows[0];
+}
+
+export async function updateExam(exam: { id: string; name: string; subject: string; date: Date }) {
+  await sql`
+    UPDATE examenes
+    SET name = ${exam.name}, subject = ${exam.subject}, date = ${exam.date.toISOString()}
+    WHERE id = ${exam.id}
+  `;
+  revalidatePath('/profesor');
+}
+
+export async function deleteExam(formData: FormData) {
+  const id = formData.get('id');
+  if (typeof id === 'string') {
+    await sql`
+      DELETE FROM examenes
+      WHERE id = ${id}
+    `;
+    revalidatePath('/profesor');
+  } else {
+    throw new Error('Invalid exam ID');
   }
 }

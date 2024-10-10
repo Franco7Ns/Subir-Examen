@@ -4,10 +4,6 @@ import Link from 'next/link';
 
 const links = [
   { name: 'Home', href: '/alumno' },
-  {
-    name: 'Examenes Alumnos',
-    href: '/alumno/examenes',
-  },
 ];
 
 export default function NavLinks() {

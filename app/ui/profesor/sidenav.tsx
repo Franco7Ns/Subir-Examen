@@ -14,7 +14,7 @@ export default function SideNav() {
             await signOut();
           }}
         >
-          <button className="flex mt-6 ml-7 w-60 outline-2 py-[10px] h-[48px] grow items-center justify-center gap-2 rounded-md bg-green-700 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3">
+          <button className="flex mt-6 ml-7 w-60 outline-2 py-[10px] h-[48px] grow items-center justify-center gap-2 rounded-md bg-green-700 p-3 text-sm font-medium hover:bg-sky-100 hover:text-green-600 md:flex-none md:justify-start md:p-2 md:px-3">
             <div className="hidden md:block">Sign Out</div>
           </button>
         </form>

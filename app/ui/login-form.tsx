@@ -28,7 +28,7 @@ export default function LoginForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
-      <div className="flex-1 mt-80 rounded-lg bg-blue-300 px-6 pb-4 pt-8">
+      <div className="flex-1 mt-80 rounded-lg bg-green-300 px-6 pb-4 pt-8">
         <h1 className="mb-3 text-2xl">
           Please log in to continue.
         </h1>
@@ -72,7 +72,7 @@ export default function LoginForm() {
           </div>
         </div>
         <button 
-          className="mt-6 ml-7 w-60 bg-blue-800 text-white rounded-md outline-2 py-[10px]" 
+          className="mt-6 ml-7 w-60 bg-green-800 text-white rounded-md outline-2 py-[10px]" 
           type="submit"
           disabled={isPending}
         >
