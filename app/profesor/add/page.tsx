@@ -14,12 +14,13 @@ export default function AddExam() {
   const [name, setName] = useState('');
   const [subject, setSubject] = useState('');
   const [date, setDate] = useState<Date | undefined>(undefined);
+  const [notas, setNotas] = useState<number | undefined>(undefined);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (name && subject && date) {
-      await addExam({ name, subject, date: date.toISOString() });
+    if (name && subject && date && notas !== undefined) {
+      await addExam({ name, subject, notas, date: date.toISOString() });
       router.push('/profesor');
     }
   };
@@ -58,6 +59,12 @@ export default function AddExam() {
             />
           </PopoverContent>
         </Popover>
+        <Input
+          type="number"
+          value={notas !== undefined ? notas : ''}
+          onChange={(e) => setNotas(Number(e.target.value))}
+          placeholder="Nota"
+        />
         <Button type="submit" className="bg-green-600 hover:bg-green-700 text-white">
           Agregar Examen
         </Button>

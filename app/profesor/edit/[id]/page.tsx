@@ -15,6 +15,7 @@ interface Exam {
   name: string;
   subject: string;
   date: Date;
+  notas: number;
 }
 
 export default function EditExam({ params }: { params: { id: string } }) {
@@ -30,6 +31,7 @@ export default function EditExam({ params }: { params: { id: string } }) {
           name: fetchedExam.name,
           subject: fetchedExam.subject,
           date: new Date(fetchedExam.date),
+          notas: fetchedExam.notas,
         });
       }
     };
@@ -86,6 +88,11 @@ export default function EditExam({ params }: { params: { id: string } }) {
             />
           </PopoverContent>
         </Popover>
+        <Input
+          value={exam.notas}
+          onChange={(e) => setExam({ ...exam, notas: Number(e.target.value) })}
+          placeholder="Nota"
+        />
         <Button type="submit" className="bg-green-600 hover:bg-green-700 text-white">
           Guardar Cambios
         </Button>

@@ -8,12 +8,14 @@ interface Exam {
   name: string;
   subject: string;
   date: Date;
+  notas: number;
 }
 
 export default async function ExamList() {
   const res = await sql`
-    SELECT id, name, subject, date
+    SELECT id, name, subject, date, notas
     FROM examenes
+    ORDER BY date ASC
   `;
 
   const examenes: Exam[] = res.rows.map((row) => ({
@@ -21,7 +23,10 @@ export default async function ExamList() {
     name: row.name,
     subject: row.subject,
     date: new Date(row.date),
+    notas: row.notas,
   }));
+
+  const today = new Date();
 
   return (
     <main className="p-6 bg-green-50">
@@ -34,11 +39,18 @@ export default async function ExamList() {
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {examenes.map((examen) => (
           <div key={examen.id} className="bg-white p-6 rounded-lg shadow-md border border-green-200">
-            <h3 className="text-lg font-semibold text-green-800 mb-2">{examen.name}</h3>
-            <p className="text-green-700 mb-2">
+            <h3 className={`text-lg font-semibold mb-2 ${examen.date < today ? 'text-red-600' : 'text-green-800'}`}>
+              {examen.name}
+            </h3>
+            <p className={`mb-2 ${examen.date < today ? 'text-red-600' : 'text-green-700'}`}>
               Fecha: {examen.date.toLocaleDateString()}
             </p>
-            <p className="text-green-600 mb-4">Materia: {examen.subject}</p>
+            <p className={`mb-4 ${examen.date < today ? 'text-red-600' : 'text-green-600'}`}>
+              Materia: {examen.subject}
+            </p>
+            <p className={`mb-4 ${examen.date < today ? 'text-red-600' : 'text-green-600'}`}>
+              Nota: {examen.notas}
+            </p>
             <div className="flex justify-between">
               <Link href={`/profesor/edit/${examen.id}`}>
                 <Button className="bg-blue-600 hover:bg-blue-700 text-white">
