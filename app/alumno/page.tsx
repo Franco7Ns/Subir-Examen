@@ -7,11 +7,27 @@ interface Exam {
   date: Date;
 }
 
+interface Nota {
+  id: string;
+  calificacion: number;
+}
+
 export default async function ExamList() {
   const res = await sql`
     SELECT id, name, subject, date
     FROM examenes
   `;
+
+  const not = await sql`
+    SELECT calificacion
+    FROM notas, alumnos
+    WHERE alumno_id = alumnos.id
+  `;
+  
+  const notas: Nota[] = not.rows.map((row) => ({
+    id: row.id,
+    calificacion: row.calificacion,
+  }));
 
   const examenes: Exam[] = res.rows.map((row) => ({
     id: row.id,
@@ -31,6 +47,16 @@ export default async function ExamList() {
               Fecha: {examen.date.toLocaleDateString()}
             </p>
             <p className="text-green-600 mb-4">Materia: {examen.subject}</p>
+            <div className="flex justify-between">
+            </div>
+          </div>
+        ))}
+        {notas.map((nota) => (
+          <div key={nota.id} className="bg-white p-6 rounded-lg shadow-md border border-green-200">
+            <h3 className="text-lg font-semibold text-green-800 mb-2">{nota.calificacion}</h3>
+            <p className="text-green-700 mb-2">
+            </p>
+            <p className="text-green-600 mb-4">Materia: </p>
             <div className="flex justify-between">
             </div>
           </div>
