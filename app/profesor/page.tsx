@@ -2,22 +2,19 @@ import { sql } from '@vercel/postgres';
 import Link from 'next/link';
 import { Button } from '../ui/button';
 import { deleteExam } from '../lib/actions';
-import { Examen } from '../lib/definitions';
 
 interface Exam {
   id: string;
   name: string;
   subject: string;
   date: Date;
-  calificacion: number | null;
 }
 
 export default async function ExamList() {
   const res = await sql`
-    SELECT examenes.id, examenes.name, examenes.subject, examenes.date, notas.calificacion
+    SELECT id, name, subject, date
     FROM examenes
-    LEFT JOIN notas ON examenes.id = notas.examen_id
-    ORDER BY examenes.date ASC
+    ORDER BY date ASC
   `;
 
   const examenes: Exam[] = res.rows.map((row) => ({
@@ -25,7 +22,6 @@ export default async function ExamList() {
     name: row.name,
     subject: row.subject,
     date: new Date(row.date),
-    calificacion: row.calificacion,
   }));
 
   const today = new Date();
@@ -51,14 +47,9 @@ export default async function ExamList() {
               Materia: {examen.subject}
             </p>
             <p className={`mb-4 ${examen.date < today ? 'text-red-600' : 'text-green-600'}`}>
-              Nota: {examen.calificacion !== null ? examen.calificacion : 'Sin calificación'}
+              Nota:
             </p>
             <div className="flex justify-between">
-              <Link href={`/profesor/calificar/${examen.id}`}>
-                <Button className="bg-orange-600 hover:bg-orange-700 text-white">
-                  Calificar
-                </Button>
-              </Link>
               <Link href={`/profesor/edit/${examen.id}`}>
                 <Button className="bg-blue-600 hover:bg-blue-700 text-white">
                   Editar
