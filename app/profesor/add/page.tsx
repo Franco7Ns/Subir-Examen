@@ -20,7 +20,7 @@ export default function AddExam() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (name && subject && date && notas !== undefined) {
-      await addExam({ name, subject, notas, date: date.toISOString() });
+      await addExam({ name, subject, date: date.toISOString() });
       router.push('/profesor');
     }
   };
@@ -59,12 +59,6 @@ export default function AddExam() {
             />
           </PopoverContent>
         </Popover>
-        <Input
-          type="number"
-          value={notas !== undefined ? notas : ''}
-          onChange={(e) => setNotas(Number(e.target.value))}
-          placeholder="Nota"
-        />
         <Button type="submit" className="bg-green-600 hover:bg-green-700 text-white">
           Agregar Examen
         </Button>
