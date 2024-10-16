@@ -14,12 +14,11 @@ export default function AddExam() {
   const [name, setName] = useState('');
   const [subject, setSubject] = useState('');
   const [date, setDate] = useState<Date | undefined>(undefined);
-  const [notas, setNotas] = useState<number | undefined>(undefined);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (name && subject && date && notas !== undefined) {
+    if (name && subject && date !== undefined) {
       await addExam({ name, subject, date: date.toISOString() });
       router.push('/profesor');
     }
