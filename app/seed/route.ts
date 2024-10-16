@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import { db } from '@vercel/postgres';
-import { users, alumnos, profesores, examenes, notas } from '../lib/placeholder-data';
+import { users, examenes, notas } from '../lib/placeholder-data';
 
 const client = await db.connect();
 async function seedUsers() {
@@ -24,44 +24,6 @@ async function seedUsers() {
     }),
   );
   return insertedUsers;
-}
-async function seedAlumnos() {
-  await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
-  await client.sql`
-    CREATE TABLE IF NOT EXISTS alumnos (
-      id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-      name VARCHAR(255) NOT NULL
-    );
-  `;
-  const insertedAlumnos = await Promise.all(
-    alumnos.map(
-      (alumno) => client.sql`
-        INSERT INTO alumnos (id, name)
-        VALUES (${alumno.id}, ${alumno.name})
-        ON CONFLICT (id) DO NOTHING;
-      `,
-    ),
-  );
-  return insertedAlumnos;
-}
-async function seedProfesores() {
-  await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
-  await client.sql`
-    CREATE TABLE IF NOT EXISTS profesores (
-      id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-      name VARCHAR(255) NOT NULL
-    );
-  `;
-  const insertedProfesores = await Promise.all(
-    profesores.map(
-      (profesor) => client.sql`
-        INSERT INTO profesores (id, name)
-        VALUES (${profesor.id}, ${profesor.name})
-        ON CONFLICT (id) DO NOTHING;
-      `,
-    ),
-  );
-  return insertedProfesores;
 }
 async function seedExamenes() {
   await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
@@ -98,7 +60,7 @@ async function seedNotas() {
     notas.map(
       (nota) => client.sql`
         INSERT INTO notas (id, alumno_id, examen_id, calificacion)
-        VALUES (${nota.id}, ${nota.alumno_id}, ${nota.examen_id}, ${nota.calificacion})
+        VALUES (${nota.id}, ${nota.user_id}, ${nota.examen_id}, ${nota.calificacion})
         ON CONFLICT (id) DO NOTHING;
       `,
     ),
@@ -109,8 +71,6 @@ export async function GET() {
   try {
     await client.sql`BEGIN`;
     await seedUsers();
-    await seedAlumnos();
-    await seedProfesores();
     await seedExamenes();
     await seedNotas();
     await client.sql`COMMIT`;
@@ -118,5 +78,5 @@ export async function GET() {
   } catch (error) {
     await client.sql`ROLLBACK`;
     return Response.json({ error }, { status: 500 });
-}
+  }
 }

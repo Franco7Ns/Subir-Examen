@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import NavLinks from '@/app/ui/profesor/nav-links';
 import { signOut } from '@/auth';
 

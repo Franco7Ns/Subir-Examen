@@ -8,31 +8,13 @@ interface Exam {
   notas: number;
 }
 
-interface Users {
-  id: string;
-  name: string;
-  email: string;
-}
-
 export default async function ExamList() {
   const res = await sql`
-    SELECT id, name, subject, date, notas
+    SELECT id, name, subject, date
     FROM examenes
     ORDER BY date ASC
   `;
-
-  const user = await sql`
-    SELECT name, email
-    FROM users
-    WHERE email = 'alumno2@gmail.com'
-  `;
-
-  const users: Users[] = user.rows.map((row) => ({
-    id: row.id,
-    name: row.name,
-    email: row.email,
-  }));
-
+  
   const examenes: Exam[] = res.rows.map((row) => ({
     id: row.id,
     name: row.name,
@@ -57,9 +39,6 @@ export default async function ExamList() {
             </p>
             <p className={`mb-4 ${examen.date < today ? 'text-red-600' : 'text-green-600'}`}>
               Materia: {examen.subject}
-            </p>
-            <p className={`mb-4 ${examen.date < today ? 'text-red-600' : 'text-green-600'}`}>
-              Nota: {examen.notas}
             </p>
             <div className="flex justify-between">
             </div>

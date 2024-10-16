@@ -5,16 +5,6 @@ export type User = {
   password: string;
 };
 
-export type Alumno = {
-  id: string;
-  name: string;
-};
-
-export type Profesor = {
-  id: string;
-  name: string;
-};
-
 export type Examen = {
   id: string; 
   name: string;

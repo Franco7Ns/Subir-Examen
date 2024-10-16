@@ -15,7 +15,6 @@ interface Exam {
   name: string;
   subject: string;
   date: Date;
-  notas: number;
 }
 
 export default function EditExam({ params }: { params: { id: string } }) {
@@ -31,7 +30,6 @@ export default function EditExam({ params }: { params: { id: string } }) {
           name: fetchedExam.name,
           subject: fetchedExam.subject,
           date: new Date(fetchedExam.date),
-          notas: fetchedExam.notas,
         });
       }
     };
@@ -58,18 +56,21 @@ export default function EditExam({ params }: { params: { id: string } }) {
     <main className="p-6 bg-green-50">
       <h1 className="text-2xl font-bold text-green-800 mb-4">Editar Examen</h1>
       <form onSubmit={handleSave} className="space-y-4">
+        <p className="text-lg font-bold text-green-600 mb-4">Nombre</p>
         <Input
           value={exam.name}
           onChange={(e) => setExam({ ...exam, name: e.target.value })}
           placeholder="Nombre del examen"
           required
         />
+        <p className="text-lg font-bold text-green-600 mb-4">Materia</p>
         <Input
           value={exam.subject}
           onChange={(e) => setExam({ ...exam, subject: e.target.value })}
           placeholder="Materia"
           required
         />
+        <p className="text-lg font-bold text-green-600 mb-4">Fecha</p>
         <Popover>
           <PopoverTrigger asChild>
             <Button
@@ -88,11 +89,6 @@ export default function EditExam({ params }: { params: { id: string } }) {
             />
           </PopoverContent>
         </Popover>
-        <Input
-          value={exam.notas}
-          onChange={(e) => setExam({ ...exam, notas: Number(e.target.value) })}
-          placeholder="Nota"
-        />
         <Button type="submit" className="bg-green-600 hover:bg-green-700 text-white">
           Guardar Cambios
         </Button>

@@ -12,24 +12,10 @@ const users = [
     password: '123456',
   },
   {
-    id: '410544b2-4001-4271-9855-fec4b6a6443o	',
-    name: 'Alumno2',
-    email: 'alumno2@gmail.com',
+    id: '410544b2-4001-4271-9855-fec4b6a6441b',
+    name: 'Alumno Pedro',
+    email: 'pedroalumno@gmail.com',
     password: '123456',
-  },
-];
-
-const alumnos = [
-  {
-    id: 'd6e15727-9fe1-4961-8c5b-ea44a9bd81aa',
-    name: 'Franco',
-  },
-];
-
-const profesores = [
-  {
-    id: 'd6e15727-9fe1-4961-8c5b-ea44a9bd81da',
-    name: 'Juan',
   },
 ];
 
@@ -45,7 +31,7 @@ const examenes = [
 const notas = [
   {
     id: 'd6e15727-9fe1-4961-8c5b-ea44a9bd81ab',
-    alumno_id: alumnos[0].id,
+    user_id: users[0].id,
     examen_id: examenes[0].id,
     calificacion: 10,
   },
@@ -53,4 +39,4 @@ const notas = [
 
 
 
-export { users, alumnos, profesores, examenes, notas };
+export { users, examenes, notas };

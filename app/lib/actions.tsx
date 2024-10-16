@@ -24,27 +24,27 @@ export async function authenticate(
   }
 }
 
-export async function addExam(exam: { name: string; subject: string; notas: number; date: string }) {
+export async function addExam(exam: { name: string; subject: string; date: string }) {
   await sql`
-    INSERT INTO examenes (name, subject, date, notas)
-    VALUES (${exam.name}, ${exam.subject}, ${exam.date}, ${exam.notas})
+    INSERT INTO examenes (name, subject, date)
+    VALUES (${exam.name}, ${exam.subject}, ${exam.date})
   `;
   revalidatePath('/profesor');
 }
 
 export async function getExam(id: string) {
   const res = await sql`
-    SELECT id, name, subject, date, notas
+    SELECT id, name, subject, date
     FROM examenes
     WHERE id = ${id}
   `;
   return res.rows[0];
 }
 
-export async function updateExam(exam: { id: string; name: string; subject: string; notas: number; date: Date }) {
+export async function updateExam(exam: { id: string; name: string; subject: string; date: Date }) {
   await sql`
     UPDATE examenes
-    SET name = ${exam.name}, subject = ${exam.subject}, notas = ${exam.notas}, date = ${exam.date.toISOString()}
+    SET name = ${exam.name}, subject = ${exam.subject}, date = ${exam.date.toISOString()}
     WHERE id = ${exam.id}
   `;
   revalidatePath('/profesor');
