@@ -10,12 +10,15 @@ interface Exam {
   user_id: string;
   nota: number;
   date: Date;
+  username: string;
 }
 
 export default async function ExamList() {
   const res = await sql`
-    SELECT id, name, subject, user_id, nota, date
-    FROM examenes
+    SELECT e.id, e.name, subject, user_id, nota, date, u.name AS "username"
+    FROM Examenes e
+    LEFT JOIN users u ON 
+    e.user_id = u.id
     ORDER BY date ASC
   `;
 
@@ -26,6 +29,7 @@ export default async function ExamList() {
     user_id: row.user_id,
     nota: row.nota,
     date: new Date(row.date),
+    username: row.username
   }));
 
   const today = new Date();
@@ -53,10 +57,18 @@ export default async function ExamList() {
             <p className={`mb-4 ${examen.date < today ? 'text-red-600' : 'text-green-600'}`}>
               Nota: {examen.nota}
             </p>
+            <p className={`mb-4 ${examen.date < today ? 'text-red-600' : 'text-green-600'}`}>
+              Nota: {examen.username}
+            </p>
             <div className="flex justify-between">
               <Link href={`/profesor/edit/${examen.id}`}>
                 <Button className="bg-blue-600 hover:bg-blue-700 text-white">
                   Editar
+                </Button>
+              </Link>
+              <Link href={`/profesor/calificar/${examen.id}`}>
+                <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                  Calificar
                 </Button>
               </Link>
               <form action={deleteExam}>

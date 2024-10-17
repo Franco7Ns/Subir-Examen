@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import { db } from '@vercel/postgres';
-import { users, examenes } from '../lib/placeholder-data';
+import { users, examenes, notas } from '../lib/placeholder-data';
 
 const client = await db.connect();
 
@@ -37,6 +37,28 @@ async function seedExamenes() {
       user_id UUID NOT NULL,
       nota INT,
       date DATE NOT NULL
+    );
+  `;
+  const insertedExamenes = await Promise.all(
+    examenes.map(
+      (examen) => client.sql`
+        INSERT INTO examenes (id, name, subject, user_id, nota, date)
+        VALUES (${examen.id}, ${examen.name}, ${examen.subject}, ${examen.user_id}, ${examen.nota}, ${examen.date})
+        ON CONFLICT (id) DO NOTHING;
+      `,
+    ),
+  );
+  return insertedExamenes;
+}
+
+async function seedNotas() {
+  await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+  await client.sql`
+    CREATE TABLE IF NOT EXISTS notas (
+      id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+      user_id UUID NOT NULL,
+      examen_id UUID NOT NULL,
+      nota INT,
     );
   `;
   const insertedExamenes = await Promise.all(

@@ -30,4 +30,13 @@ const examenes = [
   },
 ];
 
-export { users, examenes };
+const notas = [
+  {
+    id: 'd6e15727-9fe1-4961-8c5b-ea44a9bd81bm',
+    user_id: users[0].id,
+    examen_id: examenes[0].id,
+    calificacion: 10,
+  },
+];
+
+export { users, examenes, notas };

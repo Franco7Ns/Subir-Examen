@@ -14,3 +14,9 @@ export type Examen = {
   calificacion: number;
 };
 
+export type Notas = {
+  id: string; 
+  user_id: string;
+  examen_id: string;
+  calificacion: number;
+};
