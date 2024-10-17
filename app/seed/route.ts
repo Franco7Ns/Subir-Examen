@@ -1,8 +1,9 @@
 import bcrypt from 'bcrypt';
 import { db } from '@vercel/postgres';
-import { users, examenes, notas } from '../lib/placeholder-data';
+import { users, examenes } from '../lib/placeholder-data';
 
 const client = await db.connect();
+
 async function seedUsers() {
   await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
   await client.sql`
@@ -25,6 +26,7 @@ async function seedUsers() {
   );
   return insertedUsers;
 }
+
 async function seedExamenes() {
   await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
   await client.sql`
@@ -32,47 +34,28 @@ async function seedExamenes() {
       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
       name VARCHAR(255) NOT NULL,
       subject VARCHAR(255) NOT NULL,
+      user_id UUID NOT NULL,
+      nota INT,
       date DATE NOT NULL
     );
   `;
   const insertedExamenes = await Promise.all(
     examenes.map(
       (examen) => client.sql`
-        INSERT INTO examenes (id, name, subject, date)
-        VALUES (${examen.id}, ${examen.name}, ${examen.subject}, ${examen.date})
+        INSERT INTO examenes (id, name, subject, user_id, nota, date)
+        VALUES (${examen.id}, ${examen.name}, ${examen.subject}, ${examen.user_id}, ${examen.nota}, ${examen.date})
         ON CONFLICT (id) DO NOTHING;
       `,
     ),
   );
   return insertedExamenes;
 }
-async function seedNotas() {
-  await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
-  await client.sql`
-    CREATE TABLE IF NOT EXISTS notas (
-      id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-      alumno_id UUID NOT NULL,
-      examen_id UUID NOT NULL,
-      calificacion INT NOT NULL
-    );
-  `;
-  const insertedNotas = await Promise.all(
-    notas.map(
-      (nota) => client.sql`
-        INSERT INTO notas (id, alumno_id, examen_id, calificacion)
-        VALUES (${nota.id}, ${nota.user_id}, ${nota.examen_id}, ${nota.calificacion})
-        ON CONFLICT (id) DO NOTHING;
-      `,
-    ),
-  );
-  return insertedNotas;
-}
+
 export async function GET() {
   try {
     await client.sql`BEGIN`;
     await seedUsers();
     await seedExamenes();
-    await seedNotas();
     await client.sql`COMMIT`;
     return Response.json({ message: 'Database seeded successfully' });
   } catch (error) {

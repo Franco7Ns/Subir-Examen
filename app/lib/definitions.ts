@@ -10,11 +10,7 @@ export type Examen = {
   name: string;
   subject: string;
   date: string;
-};
-
-export type Nota = {
-  id: string;
-  alumno_id: string;
-  profesor_id: string;
+  user_id: string;
   calificacion: number;
 };
+
