@@ -7,12 +7,14 @@ interface Exam {
   id: string;
   name: string;
   subject: string;
+  user_id: string;
+  nota: number;
   date: Date;
 }
 
 export default async function ExamList() {
   const res = await sql`
-    SELECT id, name, subject, date
+    SELECT id, name, subject, user_id, nota, date
     FROM examenes
     ORDER BY date ASC
   `;
@@ -21,6 +23,8 @@ export default async function ExamList() {
     id: row.id,
     name: row.name,
     subject: row.subject,
+    user_id: row.user_id,
+    nota: row.nota,
     date: new Date(row.date),
   }));
 
@@ -47,7 +51,7 @@ export default async function ExamList() {
               Materia: {examen.subject}
             </p>
             <p className={`mb-4 ${examen.date < today ? 'text-red-600' : 'text-green-600'}`}>
-              Nota:
+              Nota: {examen.nota}
             </p>
             <div className="flex justify-between">
               <Link href={`/profesor/edit/${examen.id}`}>
