@@ -3,33 +3,18 @@ import Link from 'next/link';
 import { Button } from '../ui/button';
 import { deleteExam } from '../lib/actions';
 
-interface Exam {
-  id: string;
-  name: string;
-  subject: string;
-  user_id: string;
-  nota: number;
-  date: Date;
-  username: string;
-}
-
 export default async function ExamList() {
   const res = await sql`
-    SELECT e.id, e.name, subject, user_id, nota, date, u.name AS "username"
-    FROM Examenes e
-    LEFT JOIN users u ON 
-    e.user_id = u.id
-    ORDER BY date ASC
+    SELECT id, name, subject, date
+    FROM examenes 
+    ORDER BY date ASC;
   `;
 
-  const examenes: Exam[] = res.rows.map((row) => ({
+  const examenes = res.rows.map((row) => ({
     id: row.id,
     name: row.name,
     subject: row.subject,
-    user_id: row.user_id,
-    nota: row.nota,
-    date: new Date(row.date),
-    username: row.username
+    date: row.date,
   }));
 
   const today = new Date();
@@ -42,23 +27,22 @@ export default async function ExamList() {
           Agregar Examen
         </Button>
       </Link>
+      <Link href="/profesor/ver-calificaciones">
+        <Button className="mb-4 bg-green-600 hover:bg-green-700 text-white">
+          Ver Calificaciones
+        </Button>
+      </Link>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {examenes.map((examen) => (
           <div key={examen.id} className="bg-white p-6 rounded-lg shadow-md border border-green-200">
-            <h3 className={`text-lg font-semibold mb-2 ${examen.date < today ? 'text-red-600' : 'text-green-800'}`}>
+            <h3 className={`text-lg font-semibold mb-2 ${new Date(examen.date) < today ? 'text-red-600' : 'text-green-800'}`}>
               {examen.name}
             </h3>
-            <p className={`mb-2 ${examen.date < today ? 'text-red-600' : 'text-green-700'}`}>
-              Fecha: {examen.date.toLocaleDateString()}
+            <p className={`mb-2 ${new Date(examen.date) < today ? 'text-red-600' : 'text-green-700'}`}>
+              Fecha: {new Date(examen.date).toLocaleDateString()}
             </p>
-            <p className={`mb-4 ${examen.date < today ? 'text-red-600' : 'text-green-600'}`}>
+            <p className={`mb-4 ${new Date(examen.date) < today ? 'text-red-600' : 'text-green-600'}`}>
               Materia: {examen.subject}
-            </p>
-            <p className={`mb-4 ${examen.date < today ? 'text-red-600' : 'text-green-600'}`}>
-              Nota: {examen.nota}
-            </p>
-            <p className={`mb-4 ${examen.date < today ? 'text-red-600' : 'text-green-600'}`}>
-              Nota: {examen.username}
             </p>
             <div className="flex justify-between">
               <Link href={`/profesor/edit/${examen.id}`}>

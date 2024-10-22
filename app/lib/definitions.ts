@@ -1,8 +1,8 @@
 export type User = {
-  id: string;
-  name: string;
-  email: string;
-  password: string;
+    id: string
+    name?: string | null
+    email?: string | null
+    role?: 'profesor' | 'alumno'
 };
 
 export type Examen = {
@@ -10,8 +10,6 @@ export type Examen = {
   name: string;
   subject: string;
   date: string;
-  user_id: string;
-  calificacion: number;
 };
 
 export type Notas = {

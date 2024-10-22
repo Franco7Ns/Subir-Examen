@@ -14,8 +14,6 @@ interface Exam {
   id: string;
   name: string;
   subject: string;
-  user_id: string;
-  nota: number;
   date: Date;
 }
 
@@ -31,8 +29,6 @@ export default function EditExam({ params }: { params: { id: string } }) {
           id: fetchedExam.id,
           name: fetchedExam.name,
           subject: fetchedExam.subject,
-          user_id: fetchedExam.user_id,
-          nota: fetchedExam.nota,
           date: new Date(fetchedExam.date),
         });
       }
