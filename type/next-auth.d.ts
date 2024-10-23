@@ -9,14 +9,4 @@ declare module "next-auth" {
       role?: 'profesor' | 'alumno'
     }
   }
-
-  interface User {
-    role?: 'profesor' | 'alumno'
-  }
-}
-
-declare module "next-auth/jwt" {
-  interface JWT {
-    role?: 'profesor' | 'alumno'
-  }
 }

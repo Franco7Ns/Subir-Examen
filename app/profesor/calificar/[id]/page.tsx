@@ -5,11 +5,11 @@ import { useRouter } from 'next/navigation';
 import { Input } from '@/app/ui/input';
 import { Button } from '@/app/ui/button';
 import { getExam, getNotas, updateCalificacion, getUsers } from '@/app/lib/actions';
-import { User, Examen } from '@/app/lib/definitions';
+import { FrontendUser, Examen } from '@/app/lib/definitions';
 
 export default function CalificarExam({ params }: { params: { id: string } }) {
   const [exam, setExam] = useState<Examen | null>(null);
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<FrontendUser[]>([]);
   const [calificaciones, setCalificaciones] = useState<{ [key: string]: number | '' }>({});
   const router = useRouter();
 
@@ -35,7 +35,7 @@ export default function CalificarExam({ params }: { params: { id: string } }) {
 
     const fetchUsers = async () => {
       const fetchedUsers = await getUsers();
-      const alumnos = fetchedUsers.filter((user: User) => user.role === 'alumno');
+      const alumnos = fetchedUsers.filter((user: FrontendUser) => user.role === 'alumno');
       setUsers(alumnos);
       console.log('Usuarios cargados:', alumnos); // Verifica que los usuarios se están cargando
     };
@@ -90,7 +90,7 @@ export default function CalificarExam({ params }: { params: { id: string } }) {
                 onChange={(e) => handleCalificacionChange(user.id, e.target.value === '' ? '' : Number(e.target.value))}
                 placeholder="Nota"
                 type="number"
-                min="0"
+                min="1"
                 max="10"
               />
             </div>

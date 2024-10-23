@@ -1,14 +1,15 @@
 import { sql } from '@vercel/postgres';
-import { Examen } from '../lib/definitions';
+import Link from 'next/link';
+import { Button } from '../ui/button';
 
 export default async function ExamList() {
   const res = await sql`
     SELECT id, name, subject, date
-    FROM examenes
+    FROM examenes 
     ORDER BY date ASC;
   `;
 
-  const examenes: Examen[] = res.rows.map((row) => ({
+  const examenes = res.rows.map((row) => ({
     id: row.id,
     name: row.name,
     subject: row.subject,
@@ -32,6 +33,13 @@ export default async function ExamList() {
             <p className={`mb-4 ${new Date(examen.date) < today ? 'text-red-600' : 'text-green-600'}`}>
               Materia: {examen.subject}
             </p>
+            <div className="flex justify-between">
+              <Link href={`/alumno/ver-notas/${examen.id}`}>
+                <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                  Ver nota
+                </Button>
+              </Link>
+            </div>
           </div>
         ))}
       </div>

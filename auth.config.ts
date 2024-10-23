@@ -1,5 +1,6 @@
 import type { NextAuthConfig } from 'next-auth';
-import { JWT } from 'next-auth/jwt';
+import { users } from './app/lib/placeholder-data';
+import type { User } from './app/lib/definitions';
 
 export const authConfig = {
   pages: {
@@ -18,45 +19,37 @@ export const authConfig = {
 
     async session({ session, token }) {
       if (session.user) {
-        session.user.role = token.role;
+        const foundUser = users.find(u => u.email === session.user.email);
+        if (foundUser && (foundUser.role === 'profesor' || foundUser.role === 'alumno')) {
+          session.user.role = foundUser.role;
+        }
       }
       return session;
     },
 
-    async jwt({ token, user }) {
-      if (user) {
-        token.role = user.email === 'profesor@gmail.com' ? 'profesor' : 'alumno';
-      }
-      return token;
-    },
-
     authorized({ auth, request: { nextUrl } }) {
-      const user = auth?.user;
+      const user = auth?.user as User;
       const isLoggedIn = !!user;
       const isOnProfesor = nextUrl.pathname.startsWith('/profesor');
-      const isOnAlumnos = nextUrl.pathname.startsWith('/alumno');
+      const isOnAlumno = nextUrl.pathname.startsWith('/alumno');
       const isOnLogin = nextUrl.pathname === '/login';
       const isOnHome = nextUrl.pathname === '/';
 
-
       if (isLoggedIn) {
-        if (isOnHome) {
-          return Response.redirect(new URL(user.role === 'profesor' ? '/profesor' : '/alumno', nextUrl));
-        }
-        if (isOnLogin) {
+        if (isOnHome || isOnLogin) {
           return Response.redirect(new URL(user.role === 'profesor' ? '/profesor' : '/alumno', nextUrl));
         }
         const userRole = user.role;
         if (isOnProfesor && userRole !== 'profesor') {
           return Response.redirect(new URL('/alumno', nextUrl));
         }
-        if (isOnAlumnos && userRole !== 'alumno') {
+        if (isOnAlumno && userRole !== 'alumno') {
           return Response.redirect(new URL('/profesor', nextUrl));
         }
         return true;
       }
 
-      if (isOnProfesor || isOnAlumnos) {
+      if (isOnProfesor || isOnAlumno) {
         return Response.redirect(new URL('/login', nextUrl));
       }
 
