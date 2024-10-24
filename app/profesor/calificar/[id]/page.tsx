@@ -24,7 +24,6 @@ export default function CalificarExam({ params }: { params: { id: string } }) {
           subject: fetchedExam.subject,
           date: fetchedExam.date,
         });
-        // Inicializar calificaciones con los datos existentes
         const initialCalificaciones = fetchedNotas.reduce((acc: any, nota: any) => {
           acc[nota.userId] = nota.calificacion;
           return acc;
@@ -48,7 +47,6 @@ export default function CalificarExam({ params }: { params: { id: string } }) {
     e.preventDefault();
     if (exam) {
       try {
-        // Validar que las calificaciones no sean mayores de 10
         const valid = Object.values(calificaciones).every(calificacion => calificacion === '' || (typeof calificacion === 'number' && calificacion <= 10));
         if (!valid) {
           alert('Las calificaciones no pueden ser mayores de 10.');
@@ -60,7 +58,7 @@ export default function CalificarExam({ params }: { params: { id: string } }) {
             updateCalificacion(userId, exam.id, calificacion as number)
           )
         );
-        router.push('/profesor'); // Navegar a la página /profesor después de guardar
+        router.push('/profesor'); 
       } catch (error) {
         console.error('Error saving calificaciones:', error);
       }
