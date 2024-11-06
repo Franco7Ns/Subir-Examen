@@ -1,13 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { Input } from '@/app/ui/input';
 import { Button } from '@/app/ui/button';
 import { getExam, getNotas, updateCalificacion, getUsers } from '@/app/lib/actions';
 import { FrontendUser, Examen } from '@/app/lib/definitions';
 
-export default function CalificarExam({ params }: { params: { id: string } }) {
+export default function CalificarExam() {
+  const params = useParams();
   const [exam, setExam] = useState<Examen | null>(null);
   const [users, setUsers] = useState<FrontendUser[]>([]);
   const [calificaciones, setCalificaciones] = useState<{ [key: string]: number | '' }>({});
@@ -15,20 +16,23 @@ export default function CalificarExam({ params }: { params: { id: string } }) {
 
   useEffect(() => {
     const fetchExamAndNotas = async () => {
-      const fetchedExam = await getExam(params.id);
-      const fetchedNotas = await getNotas(params.id);
-      if (fetchedExam) {
-        setExam({
-          id: fetchedExam.id,
-          name: fetchedExam.name,
-          subject: fetchedExam.subject,
-          date: fetchedExam.date,
-        });
-        const initialCalificaciones = fetchedNotas.reduce((acc: any, nota: any) => {
-          acc[nota.userId] = nota.calificacion;
-          return acc;
-        }, {});
-        setCalificaciones(initialCalificaciones);
+      const examId = Array.isArray(params.id) ? params.id[0] : params.id;
+      if (examId) {
+        const fetchedExam = await getExam(examId);
+        const fetchedNotas = await getNotas(examId);
+        if (fetchedExam) {
+          setExam({
+            id: fetchedExam.id,
+            name: fetchedExam.name,
+            subject: fetchedExam.subject,
+            date: fetchedExam.date,
+          });
+          const initialCalificaciones = fetchedNotas.reduce((acc: any, nota: any) => {
+            acc[nota.userId] = nota.calificacion;
+            return acc;
+          }, {});
+          setCalificaciones(initialCalificaciones);
+        }
       }
     };
 
@@ -36,7 +40,7 @@ export default function CalificarExam({ params }: { params: { id: string } }) {
       const fetchedUsers = await getUsers();
       const alumnos = fetchedUsers.filter((user: FrontendUser) => user.role === 'alumno');
       setUsers(alumnos);
-      console.log('Usuarios cargados:', alumnos); // Verifica que los usuarios se están cargando
+      console.log('Usuarios cargados:', alumnos); 
     };
 
     fetchExamAndNotas();

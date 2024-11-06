@@ -5,7 +5,11 @@ import { AuthError } from 'next-auth';
 import { sql } from '@vercel/postgres';
 import { revalidatePath } from 'next/cache';
 import { db } from '@vercel/postgres';
+import { Notas } from './definitions';
 
+interface NotasConNombre extends Notas {
+  exam_name: string;
+}
 
 export async function authenticate(
   prevState: string | undefined,
@@ -99,19 +103,20 @@ export async function getUsers(): Promise<User[]> {
 }
 
 export async function updateCalificacion(userId: string, examId: string, calificacion: number): Promise<void> {
-  const client = await db.connect();
   try {
-    await client.sql`
+    await sql`
       INSERT INTO notas (user_id, examen_id, calificacion)
       VALUES (${userId}, ${examId}, ${calificacion})
       ON CONFLICT (user_id, examen_id)
-      DO UPDATE SET calificacion = ${calificacion}
+      DO UPDATE SET calificacion = EXCLUDED.calificacion;
     `;
-    revalidatePath('/profesor/ver-calificaciones'); 
   } catch (error) {
     console.error('Error updating calificacion:', error);
-    throw error;
-  } 
+    throw new Error('Error updating calificacion');
+  }
+  revalidatePath('/profesor');
+  revalidatePath('/profesor/ver-calificaciones');
+  revalidatePath('/profesor/calificar');
 }
 
 
@@ -136,6 +141,16 @@ export async function getNotas(examId: string): Promise<{ userId: string, califi
   } 
 }
 
-
+// actions.ts
+export async function getNotasById(userId: string, examId: string): Promise<NotasConNombre[]> {
+  const res = await sql`
+    SELECT e.name as exam_name, n.user_id, n.examen_id, n.calificacion
+    FROM notas n
+    LEFT JOIN examenes e ON e.id = n.examen_id
+    WHERE n.user_id = ${userId} AND e.id = ${examId}
+    ORDER BY e.name;
+  `;
+  return res.rows as NotasConNombre[];
+}
 
 

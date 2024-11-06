@@ -4,16 +4,17 @@ import { Button } from '../ui/button';
 
 export default async function ExamList() {
   const res = await sql`
-    SELECT id, name, subject, date
-    FROM examenes 
-    ORDER BY date ASC;
-  `;
+  SELECT e.id, e.name, e.subject, e.date, u.id as uid
+  FROM examenes e, users u
+  ORDER BY date ASC;
+`;
 
   const examenes = res.rows.map((row) => ({
     id: row.id,
     name: row.name,
     subject: row.subject,
     date: row.date,
+    uid: row.uid,
   }));
 
   const today = new Date();
@@ -34,7 +35,7 @@ export default async function ExamList() {
               Materia: {examen.subject}
             </p>
             <div className="flex justify-between">
-              <Link href={`/alumno/ver-notas/${examen.id}`}>
+              <Link href={`/alumno/ver-notas/${examen.id}/${examen.uid}`}>
                 <Button className="bg-blue-600 hover:bg-blue-700 text-white">
                   Ver nota
                 </Button>

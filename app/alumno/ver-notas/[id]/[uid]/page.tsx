@@ -1,17 +1,16 @@
 import { sql } from '@vercel/postgres';
 import Link from 'next/link';
-import { Button } from '../../../ui/button';
+import { Button } from '@/app/ui/button';
 
-export default async function VerCalificaciones({ params }: { params: { id: string } }) {
-  const { id } = params; // Obtener el ID del examen desde los parámetros
+export default async function VerCalificaciones({ params }: { params: { id: string; uid: string } }) {
+  const { id, uid } = params;
 
   const res = await sql`
-    SELECT u.name as user_name, e.name as exam_name, n.calificacion
-    FROM users u
-    LEFT JOIN notas n ON u.id = n.user_id
-    LEFT JOIN examenes e ON e.id = n.examen_id
-    WHERE e.id = ${id} -- Filtrar por el ID del examen
-    ORDER BY u.name, e.name;
+    SELECT u.name as username, n.calificacion, n.user_id, n.exam_id, e.name as examname
+    FROM notas n 
+    LEFT JOIN users u ON n.user_id = u.id
+    LEFT JOIN examenes e ON n.exam_id = e.id
+    WHERE n.exam_id = ${id} AND u.id = ${uid}
   `;
 
   const calificaciones = res.rows;
@@ -35,8 +34,8 @@ export default async function VerCalificaciones({ params }: { params: { id: stri
         <tbody>
           {calificaciones.map((calificacion, index) => (
             <tr key={index}>
-              <td className="py-2 px-4 border-b">{calificacion.user_name}</td>
-              <td className="py-2 px-4 border-b">{calificacion.exam_name}</td>
+              <td className="py-2 px-4 border-b">{calificacion.username}</td>
+              <td className="py-2 px-4 border-b">{calificacion.examname}</td>
               <td className="py-2 px-4 border-b">{calificacion.calificacion !== null ? calificacion.calificacion : 'No calificado'}</td>
             </tr>
           ))}
